@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+:root{
+ --color-primary_color:#853721;
+ --color-hover_color:#FF00FF;
+
+}
+
+@theme{
+  --color-primary_color:var(--color-primary_color);
+  --color-hover_color:var(--color-hover_color);
+}
