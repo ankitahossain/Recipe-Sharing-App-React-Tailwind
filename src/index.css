@@ -3,10 +3,12 @@
 :root{
  --color-primary_color:#853721;
  --color-hover_color:#FF00FF;
+ --color-secondary_color:#ed667d;
 
 }
 
 @theme{
   --color-primary_color:var(--color-primary_color);
   --color-hover_color:var(--color-hover_color);
+  --color-secondary_color:var(--color-secondary_color)
 }
