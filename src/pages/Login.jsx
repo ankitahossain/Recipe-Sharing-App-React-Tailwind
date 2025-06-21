@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
+import { memo } from 'react';
 import { toast, Bounce } from 'react-toastify';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getDatabase, ref, set,push } from "firebase/database";
@@ -190,4 +191,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default memo(Login);

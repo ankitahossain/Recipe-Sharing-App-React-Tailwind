@@ -101,7 +101,7 @@ const UserProfile = () => {
           />
           <span
             onClick={uploadImage}
-            className="absolute bottom-0 right-0 p-2 bg-black bg-opacity-50 rounded-full text-white text-xl cursor-pointer group-hover:block hidden"
+            className="absolute bottom-0 right-0 p-2  bg-opacity-50 rounded-full text-white text-xl cursor-pointer block"
           >
             <IoMdCloudUpload />
           </span>
@@ -113,4 +113,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserProfile

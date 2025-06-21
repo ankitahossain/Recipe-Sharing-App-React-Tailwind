@@ -1,5 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, { useState, useEffect } from 'react'; // ✅ Import hooks
+import { Link } from 'react-router'; // ✅ Correct import from react-router-dom
+import { getDatabase, ref, onValue } from 'firebase/database'; // ✅ Import getDatabase
+import Navbar from '../Components/Navbar';
+import { memo } from 'react';
 import UserProfile from '../Components/UserProfile';
 import recipe_1 from '../assets/images/Recipe-1.jpg';
 import recipe_2 from '../assets/images/Recipe-2.jpg';
@@ -12,6 +15,28 @@ import recipe_8 from '../assets/images/Recipe-8.jpg';
 import recipe_9 from '../assets/images/Recipe-9.jpg';
 
 const Home = () => {
+  
+
+const [recipes, setRecipes] = useState([]); // ✅ useState is now defined
+  const db = getDatabase(); // ✅ getDatabase is defined
+
+  useEffect(() => {
+    const recipesRef = ref(db, 'recipes');
+    onValue(recipesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const recipesArray = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setRecipes(recipesArray);
+      } else {
+        setRecipes([]);
+      }
+    });
+  }, [db]);
+
+
   const cardInfo = [
     {
       id: 1,
@@ -98,48 +123,54 @@ const Home = () => {
 
   return (
     <div>
+      <Navbar/>
       <UserProfile />
-      <div className='flex flex-col items-center mt-10'>
-        <h1 className="font-bold text-red-500 ml-[1%] mt-[5%] mb-[4%] text-[50px]">Recipes Shared</h1>
-        <div className='CardWrapper flex flex-wrap justify-around gap-4'>
-          {cardInfo.map((card) => (
-            <div
-              key={card.id}
-              className='bg-white [box-shadow:0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-w-sm rounded-2xl overflow-hidden mx-auto mt-4'
-            >
-              <div className='aspect-[3/2]'>
-                <img
-                  className='w-full h-full object-cover rounded-2xl'
-                  src={card.recipe_image}
-                  alt={card.recipe_name}
-                />
-              </div>
+      <div className="flex flex-col items-center mt-10">
+        <h1 className="font-bold text-red-500 mt-5 mb-10 text-5xl">Recipes Shared</h1>
 
-              <div className='p-6'>
-                <h3 className='text-2xl text-slate-900 font-bold'>{card.recipe_name}</h3>
-                <p className='text-slate-700 mt-2'>{card.recipe_description}</p>
+        <div className="flex flex-wrap justify-around gap-6 w-full px-4">
+          {recipes.length === 0 ? (
+            <p className="text-center text-slate-500">No recipes found. Please add some!</p>
+          ) : (
+            recipes.map((card) => (
+              <div
+                key={card.id}
+                className="bg-white shadow-md w-full max-w-sm rounded-2xl overflow-hidden"
+              >
+                <div className="aspect-[3/2]">
+                  <img
+                    className="w-full h-full object-cover"
+                    src={card.recipe_image || 'https://picsum.photos/400/200'} // ✅ Use a working placeholder
+                    alt={card.recipe_name}
+                  />
+                </div>
 
-                <div className='mt-4 flex items-center justify-between'>
-                  <span className='text-xl text-slate-900 font-bold'>{card.recipe_rating} ⭐</span>
-                  <Link
-                    to={`/recipe/${card.id}`}
-                    state={{ recipe: card }}
-                  >
-                    <button
-                      type="button"
-                      className="w-[130px] h-[50px] bg-black hover:bg-primary_color text-white rounded-2xl cursor-pointer"
+                <div className="p-6">
+                  <h3 className="text-2xl text-slate-900 font-bold">{card.recipe_name}</h3>
+                  <p className="text-slate-700 mt-2 line-clamp-3">{card.recipe_description}</p>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="text-xl text-slate-900 font-bold">{card.recipe_rating || 0} ⭐</span>
+                    <Link
+                      to={`/recipe/${card.id}`}
+                      state={{ recipe: card }}
                     >
-                      View Details
-                    </button>
-                  </Link>
+                      <button
+                        type="button"
+                        className="w-[130px] h-[50px] bg-black hover:bg-primary_color text-white rounded-2xl"
+                      >
+                        View Details
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Home;
+export default memo (Home);

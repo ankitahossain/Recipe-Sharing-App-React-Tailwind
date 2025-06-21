@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { AuthContext } from '../Context/AuthContext';
 import { useNavigate } from 'react-router';
+import { memo } from 'react';
 import { getDatabase, ref, set, push } from "firebase/database";
 import { getAuth, sendEmailVerification, updateProfile, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -135,4 +136,4 @@ const Registration = () => {
 
 
 
-export default Registration;
+export default memo (Registration);
